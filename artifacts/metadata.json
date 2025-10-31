@@ -1,7 +1,12 @@
 {
-  "created_at": "2025-10-22T12:44:12.273998Z",
+  "created_at": "2025-10-31T13:31:47.065878Z",
   "n_items": 182,
   "n_features": 795,
   "vectorizer": "sklearn TfidfVectorizer",
-  "neighbors": "sklearn NearestNeighbors(metric=cosine, algorithm=brute)"
+  "nearest_neighbors": {
+    "file": "nbrs_cosine.joblib",
+    "metric": "cosine",
+    "algorithm": "brute",
+    "n_neighbors": 50
+  }
 }
