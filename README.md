@@ -1,5 +1,5 @@
 
-# EcoTourism Recommender — **CBF + UFW (Modular Streamlit App)**
+# EcoTourism Recommender — **CBF + UFW**
 
 Aplikasi rekomendasi destinasi wisata berbasis **Content‑Based Filtering (CBF)** dengan **User Feedback Weighting (UFW)** untuk personalisasi ringan.
 
