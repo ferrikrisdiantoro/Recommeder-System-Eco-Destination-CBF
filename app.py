@@ -2,6 +2,14 @@ import streamlit as st
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import warnings
+
+# Suppress sklearn version warnings
+try:
+    from sklearn.exceptions import InconsistentVersionWarning
+    warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
+except ImportError:
+    warnings.filterwarnings("ignore", message="Trying to unpickle estimator")
 
 from eco_recsys.data import load_artifacts, ensure_min_columns
 from eco_recsys.state import init_session, like_item, skip_item, toggle_bookmark, clear_feedback
@@ -69,8 +77,10 @@ with tab_feed:
 
 # ---------------- SEARCH / KB (CBF query) ----------------
 with tab_search:
-    query, top_n_s, mmr_lambda_s, do_search = search_controls(items)
-    if do_search and query.strip():
+    query, top_n_s, mmr_lambda_s, is_search_active = search_controls(items)
+    
+    # If search is active and we have a query
+    if is_search_active and query.strip():
         results = search_cbf(
             items=items, X=X, vectorizer=vectorizer, nbrs=nbrs,
             query=query, filters=filters,

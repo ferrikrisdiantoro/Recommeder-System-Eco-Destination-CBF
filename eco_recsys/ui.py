@@ -59,11 +59,33 @@ def status_chips():
 
 def search_controls(items: pd.DataFrame):
     st.markdown("**Pencarian Knowledge Base (TF‑IDF):** ketik tema/kata kunci, mis: _pantai aceh_, _snorkeling_, _gunung camping_, dsb.")
-    query = st.text_input("Kueri pencarian", placeholder="contoh: snorkeling murah di aceh, hiking keluarga, savana, kebun teh ...")
+    
+    # Initialize session state for search if not present
+    if "search_query" not in st.session_state:
+        st.session_state.search_query = ""
+    if "search_active" not in st.session_state:
+        st.session_state.search_active = False
+
+    # Callback to handle search button click
+    def on_search_click():
+        st.session_state.search_active = True
+
+    # Input bound to session state (optional, or just read it)
+    # Here we use a key to sync with session state automatically if desired, 
+    # but to match the original flow, we'll just read the input and update state on click.
+    query_input = st.text_input("Kueri pencarian", value=st.session_state.search_query, 
+                                placeholder="contoh: snorkeling murah di aceh, hiking keluarga, savana, kebun teh ...",
+                                key="search_input_widget")
+    
+    # Sync input widget to session state query
+    st.session_state.search_query = query_input
+
     top_n_s = st.slider("Jumlah hasil", 5, 40, 12, 1)
     mmr_lambda_s = st.slider("MMR λ (Search)", 0.0, 1.0, 0.7, 0.05)
-    do_search = st.button("Cari", type="primary")
-    return query, top_n_s, mmr_lambda_s, do_search
+    
+    st.button("Cari", type="primary", on_click=on_search_click)
+    
+    return st.session_state.search_query, top_n_s, mmr_lambda_s, st.session_state.search_active
 
 def render_cards(items: pd.DataFrame, pairs: List[tuple[int,float]], show_score: bool=True, title_suffix: str=""):
     if not pairs:
@@ -76,7 +98,7 @@ def render_cards(items: pd.DataFrame, pairs: List[tuple[int,float]], show_score:
             with cols[0]:
                 img = row.get("place_img")
                 if isinstance(img, str) and img.startswith(("http://", "https://")):
-                    st.image(img, width='stretch')
+                    st.image(img, use_container_width=True)
             with cols[1]:
                 st.subheader((row.get("place_name") or "-"))
                 st.markdown(f"**Kategori:** {row.get("category") or "-"}  \n**Kota:** {row.get("city") or "-"}")
@@ -85,7 +107,7 @@ def render_cards(items: pd.DataFrame, pairs: List[tuple[int,float]], show_score:
                 st.markdown(f"**Rating:** {'-' if pd.isna(rating) else round(float(rating), 2)}  \n**Harga:** {format_idr(None if pd.isna(price) else float(price))}")
                 link = row.get("place_map")
                 if isinstance(link, str) and link.startswith(("http://", "https://")):
-                    st.link_button("Buka peta", link, width='content')
+                    st.link_button("Buka peta", link, use_container_width=False)
                 if show_score:
                     st.caption(f"Skor: {float(sc):.4f}")
                 with st.expander("Lihat deskripsi"):
