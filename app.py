@@ -60,7 +60,8 @@ with tab_feed:
         top_n=feed_knobs.top_n,
         mmr_lambda=feed_knobs.mmr_lambda,
         per_category_cap=feed_knobs.per_category_cap,
-        serendipity_pct=feed_knobs.serendipity_pct
+        serendipity_pct=feed_knobs.serendipity_pct,
+        blocked_gids=st.session_state.blocked_idx
     )
     # Apply UFW reranking if enabled
     if fb_knobs.use_feedback and cbf_candidates:

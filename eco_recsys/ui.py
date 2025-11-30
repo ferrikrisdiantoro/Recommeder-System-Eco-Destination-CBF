@@ -101,7 +101,7 @@ def render_cards(items: pd.DataFrame, pairs: List[tuple[int,float]], show_score:
                     st.image(img, use_container_width=True)
             with cols[1]:
                 st.subheader((row.get("place_name") or "-"))
-                st.markdown(f"**Kategori:** {row.get("category") or "-"}  \n**Kota:** {row.get("city") or "-"}")
+                st.markdown(f"**Kategori:** {row.get('category') or '-'}  \n**Kota:** {row.get('city') or '-'}")
                 rating = row.get("rating")
                 price  = row.get("price")
                 st.markdown(f"**Rating:** {'-' if pd.isna(rating) else round(float(rating), 2)}  \n**Harga:** {format_idr(None if pd.isna(price) else float(price))}")

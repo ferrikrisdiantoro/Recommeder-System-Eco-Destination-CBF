@@ -66,9 +66,15 @@ def mmr_select(idx_all, X, base_scores, top_n=20, lambda_mmr=0.7,
 
     return [int(idx_all[loc]) for loc in selected_loc]
 
-def build_feed_cbf(items, X, filters, top_n=12, mmr_lambda=0.7, per_category_cap=2, serendipity_pct=15):
+def build_feed_cbf(items, X, filters, top_n=12, mmr_lambda=0.7, per_category_cap=2, serendipity_pct=15, blocked_gids=None):
     mask = _mask_by_filters(items, filters)
     idx_all = np.arange(len(items))[mask]
+
+    # Filter out blocked items if any
+    if blocked_gids:
+        blocked_set = set(blocked_gids)
+        idx_all = np.array([i for i in idx_all if i not in blocked_set])
+
     if idx_all.size == 0:
         return []
 
