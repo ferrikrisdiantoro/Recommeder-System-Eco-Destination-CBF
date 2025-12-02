@@ -1,4 +1,3 @@
-
 import re
 
 STOPWORDS_ID = {
@@ -13,6 +12,6 @@ IMPORTANT_WORDS = {"di","ke","dari","untuk","dengan","yang"}
 
 def preprocess_text(text: str) -> str:
     text = str(text).lower()
-    tokens = re.findall(r"\\w+", text, flags=re.UNICODE)
+    tokens = re.findall(r"\w+", text, flags=re.UNICODE)
     filtered = [t for t in tokens if (t not in STOPWORDS_ID) or (t in IMPORTANT_WORDS)]
     return " ".join(filtered)
