@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Sistem Rekomendasi - CBF + UFW</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #fff;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 50px 60px;
+        }
+
+        /* =============== HEADER STYLES =============== */
+        .doc-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #2D5A27;
+        }
+
+        .doc-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .doc-title {
+            color: #2D5A27;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .doc-subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .doc-file {
+            background: #f0f7ef;
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #2D5A27;
+        }
+
+        /* =============== SECTION STYLES =============== */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2D5A27;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 4px solid #2D5A27;
+        }
+
+        .section-number {
+            background: #2D5A27;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin: 25px 0 12px 0;
+        }
+
+        p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        /* =============== DEFINITION BOX (GREEN) =============== */
+        .definition-box {
+            background: linear-gradient(135deg, #f0f7ef 0%, #e8f5e3 100%);
+            border-left: 4px solid #2D5A27;
+            padding: 18px 22px;
+            margin: 18px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-box strong {
+            color: #2D5A27;
+        }
+
+        /* =============== ANALOGY BOX (ORANGE) =============== */
+        .analogy-box {
+            background: linear-gradient(135deg, #fff8f0 0%, #ffedd5 100%);
+            border-left: 4px solid #ea580c;
+            padding: 18px 22px;
+            margin: 18px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .analogy-box::before {
+            content: "🎯 Analogi: ";
+            font-weight: 700;
+            color: #ea580c;
+        }
+
+        /* =============== INFO BOX (BLUE) =============== */
+        .info-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 18px 22px;
+            margin: 18px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box::before {
+            content: "💡 Tips: ";
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        /* =============== CODE BLOCKS =============== */
+        code {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 18px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .code-comment {
+            color: #6ee7b7;
+        }
+
+        .code-keyword {
+            color: #c084fc;
+        }
+
+        .code-string {
+            color: #fbbf24;
+        }
+
+        .code-function {
+            color: #60a5fa;
+        }
+
+        .code-number {
+            color: #f472b6;
+        }
+
+        /* =============== TABLES =============== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: #2D5A27;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        tr:hover {
+            background: #f0f7ef;
+        }
+
+        /* =============== FORMULA BOX =============== */
+        .formula-box {
+            background: #faf5ff;
+            border: 2px solid #9333ea;
+            padding: 20px 25px;
+            margin: 18px 0;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .formula-box .formula {
+            font-size: 16px;
+            font-weight: 600;
+            color: #581c87;
+            margin-bottom: 8px;
+        }
+
+        .formula-box .formula-desc {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        /* =============== FLOW DIAGRAM =============== */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 25px 0;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .flow-box {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .flow-box.green {
+            background: #dcfce7;
+            color: #166534;
+            border: 2px solid #22c55e;
+        }
+
+        .flow-box.blue {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 2px solid #3b82f6;
+        }
+
+        .flow-box.orange {
+            background: #ffedd5;
+            color: #9a3412;
+            border: 2px solid #f97316;
+        }
+
+        .flow-box.purple {
+            background: #f3e8ff;
+            color: #6b21a8;
+            border: 2px solid #a855f7;
+        }
+
+        .flow-arrow {
+            font-size: 24px;
+            color: #9ca3af;
+        }
+
+        /* =============== STEP LIST =============== */
+        .step-list {
+            counter-reset: step;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step;
+            margin-bottom: 15px;
+            padding-left: 45px;
+            position: relative;
+        }
+
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            width: 30px;
+            height: 30px;
+            background: #2D5A27;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* =============== FILE STRUCTURE =============== */
+        .file-tree {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .file-tree .folder {
+            color: #60a5fa;
+        }
+
+        .file-tree .file {
+            color: #fbbf24;
+        }
+
+        .file-tree .desc {
+            color: #94a3b8;
+        }
+
+        /* =============== BULLET LIST =============== */
+        ul {
+            padding-left: 25px;
+            margin: 14px 0;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        ul li strong {
+            color: #2D5A27;
+        }
+
+        /* =============== PAGE BREAK =============== */
+        .page-break {
+            page-break-before: always;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px dashed #e5e7eb;
+        }
+
+        /* =============== FOOTER =============== */
+        .doc-footer {
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 2px solid #2D5A27;
+            text-align: center;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* =============== HIGHLIGHT =============== */
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .highlight-green {
+            background: #dcfce7;
+            color: #166534;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .highlight-red {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =============== HEADER =============== -->
+    <div class="doc-header">
+        <div class="doc-icon">🌿</div>
+        <h1 class="doc-title">Panduan Sistem Rekomendasi<br>Content-Based Filtering + User Feedback Weighting</h1>
+        <p class="doc-subtitle">Dokumentasi Lengkap untuk Mahasiswa Pemula</p>
+        <div class="doc-file">📁 eco_recsys/cbf.py & ufw.py</div>
+    </div>
+
+    <!-- =============== SECTION 1: GAMBARAN UMUM =============== -->
+    <div class="section">
+        <h2 class="section-title"><span class="section-number">1</span> Gambaran Umum Sistem</h2>
+
+        <div class="definition-box">
+            <strong>Apa itu Sistem Rekomendasi?</strong><br>
+            Sistem rekomendasi adalah program komputer yang membantu pengguna menemukan item yang mungkin mereka sukai,
+            berdasarkan berbagai faktor seperti preferensi, perilaku, dan karakteristik item.
+        </div>
+
+        <p>Sistem ini menggunakan dua pendekatan utama:</p>
+
+        <ul>
+            <li><strong>Content-Based Filtering (CBF)</strong> — Merekomendasikan item berdasarkan kemiripan
+                konten/deskripsi</li>
+            <li><strong>User Feedback Weighting (UFW)</strong> — Menyesuaikan ranking berdasarkan feedback user
+                (Like/Skip)</li>
+        </ul>
+
+        <div class="analogy-box">
+            Bayangkan kamu punya teman yang tahu selera musikmu. Saat ada lagu baru, temanmu bisa bilang "Eh, ini cocok
+            sama selera kamu!". Sistem rekomendasi bekerja seperti teman tersebut, tapi menggunakan algoritma
+            matematika.
+        </div>
+
+        <h3>Alur Kerja Sistem</h3>
+        <div class="flow-diagram">
+            <div class="flow-box green">📄 Data Destinasi</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box blue">🔢 TF-IDF Vectorizer</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box orange">📊 CBF Scoring</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box purple">⚖️ UFW Reranking</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box green">✅ Hasil Rekomendasi</div>
+        </div>
+    </div>
+
+    <!-- =============== SECTION 2: STRUKTUR FILE =============== -->
+    <div class="section page-break">
+        <h2 class="section-title"><span class="section-number">2</span> Struktur File Proyek</h2>
+
+        <p>Berikut adalah file-file penting yang perlu kamu pahami:</p>
+
+        <div class="file-tree">
+            <span class="folder">📁 eco_recsys/</span> <span class="desc">← Package utama</span><br>
+            &nbsp;&nbsp;├── <span class="file">cbf.py</span> <span class="desc">← <strong>Algoritma Content-Based
+                    Filtering</strong></span><br>
+            &nbsp;&nbsp;├── <span class="file">ufw.py</span> <span class="desc">← <strong>User Feedback
+                    Weighting</strong></span><br>
+            &nbsp;&nbsp;├── <span class="file">ui.py</span> <span class="desc">← Komponen antarmuka Streamlit</span><br>
+            &nbsp;&nbsp;├── <span class="file">data.py</span> <span class="desc">← Loader untuk memuat
+                artifacts</span><br>
+            &nbsp;&nbsp;├── <span class="file">state.py</span> <span class="desc">← Manajemen
+                Like/Skip/Bookmark</span><br>
+            &nbsp;&nbsp;├── <span class="file">utils.py</span> <span class="desc">← Fungsi utilitas</span><br>
+            &nbsp;&nbsp;└── <span class="file">text.py</span> <span class="desc">← Preprocessing teks</span><br>
+            <br>
+            <span class="folder">📁 artifacts/</span> <span class="desc">← Hasil training dari notebook</span><br>
+            &nbsp;&nbsp;├── <span class="file">items.csv</span> <span class="desc">← Data destinasi wisata</span><br>
+            &nbsp;&nbsp;├── <span class="file">tfidf_matrix.npz</span> <span class="desc">← Matriks TF-IDF</span><br>
+            &nbsp;&nbsp;├── <span class="file">vectorizer.joblib</span> <span class="desc">← TF-IDF
+                vectorizer</span><br>
+            &nbsp;&nbsp;└── <span class="file">nbrs_cosine.joblib</span> <span class="desc">← Index pencarian
+                cepat</span><br>
+            <br>
+            <span class="file">📄 app.py</span> <span class="desc">← Aplikasi Streamlit utama</span>
+        </div>
+
+        <div class="info-box">
+            Untuk memahami sistem ini, fokus pada dua file: <code>cbf.py</code> (bagaimana rekomendasi dibuat) dan
+            <code>ufw.py</code> (bagaimana personalisasi bekerja).
+        </div>
+    </div>
+
+    <!-- =============== SECTION 3: CBF =============== -->
+    <div class="section page-break">
+        <h2 class="section-title"><span class="section-number">3</span> Content-Based Filtering (cbf.py)</h2>
+
+        <div class="definition-box">
+            <strong>Apa itu Content-Based Filtering?</strong><br>
+            CBF adalah metode rekomendasi yang fokus pada <em>karakteristik/konten</em> dari item. Sistem menganalisis
+            deskripsi, kategori, dan fitur item untuk menemukan item yang serupa.
+        </div>
+
+        <div class="analogy-box">
+            Seperti ketika kamu suka novel misteri karya Agatha Christie, sistem CBF akan merekomendasikan novel misteri
+            lainnya karena memiliki "konten" yang mirip (genre misteri, gaya penulisan detektif, dll).
+        </div>
+
+        <h3>Langkah 1: TF-IDF (Text to Numbers)</h3>
+
+        <p><strong>TF-IDF</strong> (Term Frequency - Inverse Document Frequency) mengubah teks menjadi angka (vektor).
+            Ini penting karena komputer tidak bisa langsung memproses teks.</p>
+
+        <table>
+            <tr>
+                <th>Komponen</th>
+                <th>Penjelasan</th>
+                <th>Contoh</th>
+            </tr>
+            <tr>
+                <td><strong>TF</strong></td>
+                <td>Seberapa sering kata muncul dalam dokumen</td>
+                <td>"pantai" muncul 3× → TF tinggi</td>
+            </tr>
+            <tr>
+                <td><strong>IDF</strong></td>
+                <td>Seberapa jarang kata muncul di semua dokumen</td>
+                <td>"snorkeling" jarang → IDF tinggi</td>
+            </tr>
+            <tr>
+                <td><strong>TF-IDF</strong></td>
+                <td>TF × IDF = Skor kepentingan kata</td>
+                <td>Kata unik + sering = skor tinggi</td>
+            </tr>
+        </table>
+
+        <div class="analogy-box">
+            Bayangkan kamu membuat "sidik jari" untuk setiap destinasi. Kata-kata unik seperti "snorkeling" atau
+            "pendakian" menjadi ciri khas yang membedakan satu destinasi dari lainnya.
+        </div>
+
+        <h3>Langkah 2: Cosine Similarity</h3>
+
+        <p>Setelah setiap item diubah jadi vektor, kita mengukur "kemiripan" menggunakan <strong>Cosine
+                Similarity</strong>:</p>
+
+        <div class="formula-box">
+            <div class="formula">Cosine Similarity = cos(θ) = (A · B) / (|A| × |B|)</div>
+            <div class="formula-desc">Nilai: 0 (tidak mirip) sampai 1 (sangat mirip)</div>
+        </div>
+
+        <h3>Langkah 3: MMR (Diversifikasi Hasil)</h3>
+
+        <p><strong>MMR</strong> (Maximal Marginal Relevance) menyeimbangkan <em>relevansi</em> dan <em>keragaman</em>
+            hasil.</p>
+
+        <div class="formula-box">
+            <div class="formula">MMR = λ × Relevansi − (1−λ) × Similarity dengan item terpilih</div>
+            <div class="formula-desc">λ tinggi = prioritas relevansi; λ rendah = prioritas keragaman</div>
+        </div>
+
+        <div class="analogy-box">
+            Seperti memilih film untuk marathon: jika λ=0.9, kamu pilih film rating tertinggi meski genre sama. Jika
+            λ=0.3, kamu pilih film beragam meski rating sedikit lebih rendah.
+        </div>
+
+        <h3>Kode: build_feed_cbf()</h3>
+
+        <p>Ini adalah fungsi utama untuk membuat feed rekomendasi:</p>
+
+        <pre><code><span class="code-keyword">def</span> <span class="code-function">build_feed_cbf</span>(items, X, filters, top_n=<span class="code-number">12</span>, ...):
+    <span class="code-string">"""
+    Membangun feed rekomendasi untuk tab Feed.
+    """</span>
+    
+    <span class="code-comment"># Step 1: Filter item berdasarkan kriteria user</span>
+    filter_mask = _mask_by_filters(items, filters)
+    idx_all = np.arange(len(items))[filter_mask]
+    
+    <span class="code-comment"># Step 2: Hapus item yang di-skip</span>
+    idx_all = _filter_blocked_items(idx_all, blocked_gids)
+    
+    <span class="code-comment"># Step 3: Hitung skor dasar dari rating</span>
+    base_scores = _calculate_base_scores(items, idx_all)
+    
+    <span class="code-comment"># Step 4: Pilih dengan MMR (relevan + beragam)</span>
+    selected_gids = mmr_select(idx_all, X, base_scores, top_n=top_n)
+    
+    <span class="code-comment"># Step 5: Tambahkan item kejutan (serendipity)</span>
+    selected_gids = _add_serendipity_items(selected_gids, ...)
+    
+    <span class="code-keyword">return</span> [Candidate(gid=g, base_score=score) <span class="code-keyword">for</span> g <span class="code-keyword">in</span> selected_gids]</code></pre>
+
+        <h3>Fungsi-Fungsi di cbf.py</h3>
+
+        <table>
+            <tr>
+                <th>Fungsi</th>
+                <th>Kegunaan</th>
+            </tr>
+            <tr>
+                <td><code>_mask_by_filters()</code></td>
+                <td>Filter item berdasarkan kategori, kota, harga</td>
+            </tr>
+            <tr>
+                <td><code>_calculate_base_scores()</code></td>
+                <td>Hitung skor dasar dari rating item</td>
+            </tr>
+            <tr>
+                <td><code>mmr_select()</code></td>
+                <td>Pilih item dengan algoritma MMR</td>
+            </tr>
+            <tr>
+                <td><code>_add_serendipity_items()</code></td>
+                <td>Tambahkan item "kejutan" untuk variasi</td>
+            </tr>
+            <tr>
+                <td><code>build_feed_cbf()</code></td>
+                <td><strong>UTAMA:</strong> Bangun feed rekomendasi</td>
+            </tr>
+            <tr>
+                <td><code>search_cbf()</code></td>
+                <td><strong>UTAMA:</strong> Cari berdasarkan query</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- =============== SECTION 4: UFW =============== -->
+    <div class="section page-break">
+        <h2 class="section-title"><span class="section-number">4</span> User Feedback Weighting (ufw.py)</h2>
+
+        <div class="definition-box">
+            <strong>Apa itu User Feedback Weighting?</strong><br>
+            UFW menyesuaikan hasil rekomendasi berdasarkan <em>feedback langsung</em> dari pengguna. Jika pengguna Like
+            atau Skip suatu item, sistem akan "belajar" untuk memperbaiki rekomendasi.
+        </div>
+
+        <div class="analogy-box">
+            Bayangkan pelayan restoran yang memperhatikan masakanmu. Jika kamu bilang "enak!" pada sup ayam, pelayan
+            akan menawarkan menu sup lainnya. Jika kamu bilang "tidak suka" pada makanan pedas, pelayan tidak akan
+            menawarkan menu pedas.
+        </div>
+
+        <h3>Komponen UFW</h3>
+
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Simbol</th>
+                <th>Fungsi</th>
+            </tr>
+            <tr>
+                <td><strong>Like Boost</strong></td>
+                <td>α (alpha)</td>
+                <td>Menaikkan skor item mirip dengan item yang di-Like</td>
+            </tr>
+            <tr>
+                <td><strong>Skip Penalty</strong></td>
+                <td>β (beta)</td>
+                <td>Menurunkan skor item yang sudah di-Skip</td>
+            </tr>
+            <tr>
+                <td><strong>Category Boost</strong></td>
+                <td>γ (gamma)</td>
+                <td>Menaikkan skor item dari kategori favorit</td>
+            </tr>
+        </table>
+
+        <h3>Rumus UFW</h3>
+
+        <div class="formula-box">
+            <div class="formula">Skor Akhir = Skor Dasar + α×(Similarity ke Like) − β×(Skip) + γ×(Kategori)</div>
+            <div class="formula-desc">Item mirip Like naik ↑ | Item di-Skip turun ↓ | Kategori favorit bonus ↑</div>
+        </div>
+
+        <h3>Langkah 1: Hitung Centroid Like</h3>
+
+        <p><strong>Centroid</strong> adalah "titik pusat" dari semua item yang di-Like. Ini mewakili "preferensi ideal"
+            pengguna.</p>
+
+        <div class="analogy-box">
+            Jika kamu Like 3 pantai yang berbeda, centroid adalah "pantai ideal" yang menggabungkan karakteristik
+            ketiganya. Item baru yang mirip dengan centroid ini kemungkinan besar akan kamu sukai juga.
+        </div>
+
+        <pre><code><span class="code-keyword">def</span> <span class="code-function">_compute_centroid_dense</span>(X, indices):
+    <span class="code-string">"""Menghitung centroid dari item yang di-Like."""</span>
+    <span class="code-keyword">if not</span> indices:
+        <span class="code-keyword">return None</span>
+    
+    <span class="code-comment"># Ambil vektor dari semua item yang di-Like</span>
+    liked_vectors = X[list(indices)]
+    
+    <span class="code-comment"># Hitung rata-rata (mean) dari semua vektor</span>
+    centroid = liked_vectors.mean(axis=<span class="code-number">0</span>)
+    
+    <span class="code-keyword">return</span> centroid</code></pre>
+
+        <h3>Langkah 2: Hitung Similarity ke Centroid</h3>
+
+        <pre><code><span class="code-keyword">def</span> <span class="code-function">_compute_like_similarity</span>(gids, X, centroid):
+    <span class="code-string">"""Hitung seberapa mirip setiap item dengan centroid."""</span>
+    
+    <span class="code-keyword">if</span> centroid <span class="code-keyword">is None</span>:
+        <span class="code-keyword">return</span> np.zeros(len(gids))  <span class="code-comment"># Tidak ada Like</span>
+    
+    <span class="code-comment"># Hitung cosine similarity ke centroid</span>
+    similarities = cosine_similarity(X[gids], centroid)
+    
+    <span class="code-comment"># Normalisasi ke 0-1</span>
+    <span class="code-keyword">return</span> normalize_minmax(similarities)</code></pre>
+
+        <h3>Langkah 3: Hitung Skor Akhir</h3>
+
+        <pre><code><span class="code-keyword">for</span> gid <span class="code-keyword">in</span> gids:
+    <span class="code-comment"># Mulai dari skor dasar</span>
+    score = base_score
+    
+    <span class="code-comment"># Boost dari similarity ke Like</span>
+    score += alpha * like_similarity
+    
+    <span class="code-comment"># Penalty jika item di-Skip</span>
+    <span class="code-keyword">if</span> gid <span class="code-keyword">in</span> blocked:
+        score -= beta
+    
+    <span class="code-comment"># Bonus dari kategori favorit</span>
+    score += gamma * category_count</code></pre>
+
+        <h3>Contoh Dampak UFW</h3>
+
+        <table>
+            <tr>
+                <th>Item</th>
+                <th>Sebelum UFW</th>
+                <th>Setelah UFW</th>
+                <th>Alasan</th>
+            </tr>
+            <tr>
+                <td>Pantai A (di-Like)</td>
+                <td>0.90</td>
+                <td>1.20</td>
+                <td class="highlight-green">↑ Boost dari Like</td>
+            </tr>
+            <tr>
+                <td>Pantai C</td>
+                <td>0.80</td>
+                <td><strong>1.30</strong></td>
+                <td class="highlight-green">↑ Mirip dengan item Like</td>
+            </tr>
+            <tr>
+                <td>Gunung B (di-Skip)</td>
+                <td>0.85</td>
+                <td>0.15</td>
+                <td class="highlight-red">↓ Penalty dari Skip</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- =============== SECTION 5: ALUR APLIKASI =============== -->
+    <div class="section page-break">
+        <h2 class="section-title"><span class="section-number">5</span> Alur Kerja Aplikasi</h2>
+
+        <h3>Tab Feed (Tanpa Query)</h3>
+
+        <ol class="step-list">
+            <li><strong>Filter:</strong> User pilih kategori/kota/harga → Item yang tidak sesuai dihapus</li>
+            <li><strong>Scoring:</strong> Hitung skor dasar dari rating setiap item</li>
+            <li><strong>MMR:</strong> Pilih item yang relevan DAN beragam</li>
+            <li><strong>Serendipity:</strong> Tambahkan beberapa item "kejutan"</li>
+            <li><strong>UFW:</strong> Jika aktif, sesuaikan ranking berdasarkan Like/Skip</li>
+            <li><strong>Display:</strong> Tampilkan hasil dalam bentuk kartu</li>
+        </ol>
+
+        <h3>Tab Search (Dengan Query)</h3>
+
+        <ol class="step-list">
+            <li><strong>Input:</strong> User ketik kata kunci (misal: "pantai snorkeling")</li>
+            <li><strong>Preprocessing:</strong> Query dibersihkan (lowercase, hapus stopwords)</li>
+            <li><strong>TF-IDF:</strong> Query diubah menjadi vektor angka</li>
+            <li><strong>Similarity:</strong> Cari item dengan vektor paling mirip</li>
+            <li><strong>MMR:</strong> Pilih hasil yang relevan dan beragam</li>
+            <li><strong>UFW:</strong> Sesuaikan ranking berdasarkan feedback user</li>
+        </ol>
+
+        <div class="definition-box">
+            <strong>Perbedaan Feed vs Search:</strong><br>
+            • <strong>Feed:</strong> Tidak perlu query, skor dasar dari rating<br>
+            • <strong>Search:</strong> Perlu query, skor dasar dari similarity dengan query
+        </div>
+    </div>
+
+    <!-- =============== SECTION 6: CARA MENJALANKAN =============== -->
+    <div class="section page-break">
+        <h2 class="section-title"><span class="section-number">6</span> Cara Menjalankan Aplikasi</h2>
+
+        <h3>Instalasi</h3>
+
+        <pre><code><span class="code-comment"># Buka terminal, masuk ke folder proyek</span>
+cd <span class="code-string">"D:\Projek\Freelancer\cl25_fw - System Recommender CBF (DONE)"</span>
+
+<span class="code-comment"># Install dependencies</span>
+pip install streamlit scikit-learn scipy pandas numpy joblib</code></pre>
+
+        <h3>Menjalankan</h3>
+
+        <pre><code><span class="code-comment"># Jalankan aplikasi Streamlit</span>
+streamlit run app.py
+
+<span class="code-comment"># Buka browser: http://localhost:8501</span></code></pre>
+
+        <h3>Menggunakan Aplikasi</h3>
+
+        <ol class="step-list">
+            <li><strong>Tab Feed:</strong> Lihat rekomendasi berdasarkan rating dan filter</li>
+            <li><strong>Tab Search:</strong> Ketik kata kunci dan klik "Cari"</li>
+            <li><strong>⭐ Like:</strong> Tandai item yang kamu suka → Hasil akan dipersonalisasi</li>
+            <li><strong>🚫 Skip:</strong> Tandai item yang tidak menarik → Item diturunkan</li>
+            <li><strong>🔖 Bookmark:</strong> Simpan item favorit untuk dilihat nanti</li>
+        </ol>
+    </div>
+
+    <!-- =============== SECTION 7: PARAMETER =============== -->
+    <div class="section page-break">
+        <h2 class="section-title"><span class="section-number">7</span> Parameter yang Dapat Diatur</h2>
+
+        <h3>Parameter Feed</h3>
+
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Range</th>
+                <th>Penjelasan</th>
+            </tr>
+            <tr>
+                <td><strong>Top-N</strong></td>
+                <td>5 - 40</td>
+                <td>Jumlah item yang ditampilkan</td>
+            </tr>
+            <tr>
+                <td><strong>MMR λ</strong></td>
+                <td>0.0 - 1.0</td>
+                <td>0 = beragam, 1 = relevan</td>
+            </tr>
+            <tr>
+                <td><strong>Batas per Kategori</strong></td>
+                <td>0 - 6</td>
+                <td>Maks item per kategori</td>
+            </tr>
+            <tr>
+                <td><strong>Serendipity %</strong></td>
+                <td>0 - 30%</td>
+                <td>Item "kejutan" yang ditambahkan</td>
+            </tr>
+        </table>
+
+        <h3>Parameter UFW</h3>
+
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Default</th>
+                <th>Penjelasan</th>
+            </tr>
+            <tr>
+                <td><strong>α (alpha)</strong></td>
+                <td>0.6</td>
+                <td>Boost untuk item mirip Like (0-2)</td>
+            </tr>
+            <tr>
+                <td><strong>β (beta)</strong></td>
+                <td>0.7</td>
+                <td>Penalty untuk item Skip (0-2)</td>
+            </tr>
+            <tr>
+                <td><strong>γ (gamma)</strong></td>
+                <td>0.02</td>
+                <td>Bonus kategori favorit (0-0.2)</td>
+            </tr>
+        </table>
+
+        <div class="info-box">
+            <strong>Tips Tuning:</strong><br>
+            • Hasil monoton? → Turunkan MMR λ atau tingkatkan batas kategori<br>
+            • UFW terlalu agresif? → Turunkan α dan β<br>
+            • Ingin lebih personal? → Tingkatkan α dan aktifkan UFW
+        </div>
+    </div>
+
+    <!-- =============== FOOTER =============== -->
+    <div class="doc-footer">
+        <p>📚 Dokumentasi Sistem Rekomendasi CBF + UFW</p>
+        <p>EcoTourism Recommender — Content-Based Filtering with User Feedback Weighting</p>
+        <p style="margin-top: 10px; font-size: 12px;">Dibuat untuk membantu mahasiswa memahami sistem rekomendasi</p>
+    </div>
+
+</body>
+
+</html>
