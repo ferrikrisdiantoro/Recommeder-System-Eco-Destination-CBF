@@ -66,13 +66,9 @@ def search_controls(items: pd.DataFrame):
     if "search_active" not in st.session_state:
         st.session_state.search_active = False
 
-    # Callback to handle search button click
     def on_search_click():
         st.session_state.search_active = True
 
-    # Input bound to session state (optional, or just read it)
-    # Here we use a key to sync with session state automatically if desired, 
-    # but to match the original flow, we'll just read the input and update state on click.
     query_input = st.text_input("Kueri pencarian", value=st.session_state.search_query, 
                                 placeholder="contoh: snorkeling murah di aceh, hiking keluarga, savana, kebun teh ...",
                                 key="search_input_widget")
