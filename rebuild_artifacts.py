@@ -62,6 +62,24 @@ def rebuild():
     # Preprocess text (cleansing)
     print("Preprocessing text (might take a moment)...")
     df['gabungan'] = df['gabungan'].apply(preprocess_text)
+
+    # --- CLEANING DATA (Price & Rating) ---
+    print("Cleaning Price and Rating columns...")
+    def clean_price(val):
+        # Convert 'Rp900,000' -> 900000.0
+        val_str = str(val)
+        if val_str.lower() == 'nan': return 0.0
+        # Hapus Rp, koma, spasi
+        clean = val_str.replace("Rp", "").replace("rp", "").replace(",", "").replace(" ", "").strip()
+        try:
+            return float(clean)
+        except ValueError:
+            return 0.0
+
+    df['price'] = df['price'].apply(clean_price)
+    
+    # Pastikan rating juga float
+    df['rating'] = pd.to_numeric(df['rating'], errors='coerce').fillna(0.0)
     
     # Save processed items to items.csv
     items_path = art_dir / "items.csv"
