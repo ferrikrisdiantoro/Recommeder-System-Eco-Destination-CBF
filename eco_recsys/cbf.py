@@ -19,6 +19,7 @@ from typing import Optional, List, Tuple, Dict, Set
 import numpy as np
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.exceptions import NotFittedError
 
 from .text import preprocess_text
 from .utils import normalize_minmax
@@ -583,7 +584,8 @@ def search_cbf(
     filters: Dict, 
     top_n: int = 12, 
     mmr_lambda: float = 0.7, 
-    per_category_cap: int = 3
+    per_category_cap: int = 3,
+    similarity_threshold: float = 0.1
 ) -> List[Tuple[int, float]]:
     """
     Pencarian destinasi menggunakan query text (Knowledge Base search).
@@ -641,8 +643,21 @@ def search_cbf(
         return []  # Tidak ada item yang lolos filter
     
     # Step 2: Preprocess query dan transform ke vektor TF-IDF
-    processed_query = preprocess_text(query)
-    query_vector = vectorizer.transform([processed_query])
+    try:
+        processed_query = preprocess_text(query)
+        # Handle case where vectorizer might not be fitted properly
+        if hasattr(vectorizer, 'idf_'):
+            query_vector = vectorizer.transform([processed_query])
+        else:
+            # Fallback for some sklearn versions or if loaded incorrectly
+            # Try to force check if it looks fitted, otherwise raise/return
+            print("Warning: Vectorizer attribute 'idf_' missing. Attempting transform anyway.")
+            query_vector = vectorizer.transform([processed_query])
+            
+    except (NotFittedError, AttributeError, ValueError) as e:
+        print(f"Error in vectorizer: {e}")
+        return []  # Return empty if vectorizer fails
+
     
     # Step 3: Cari item mirip
     if nbrs is not None:
@@ -650,6 +665,12 @@ def search_cbf(
         nn_results = _search_with_nn_index(query_vector, nbrs, idx_all, top_n)
         
         if nn_results:
+            # Filter results below threshold
+            nn_results = [(g, s) for g, s in nn_results if s >= similarity_threshold]
+
+            if not nn_results:
+                return []
+
             # Hasil valid dari NN index
             sub_gids = np.array([g for g, _ in nn_results], dtype=int)
             sub_scores = normalize_minmax([s for _, s in nn_results])
@@ -671,6 +692,18 @@ def search_cbf(
     
     # Fallback: Gunakan cosine_similarity penuh
     similarities = _search_fallback(query_vector, X, idx_all)
+    
+    # Filter by threshold (Raw Cosine Similarity)
+    # Kita hanya ambil item yang kemiripannya >= threshold (misal 0.1)
+    valid_mask = similarities >= similarity_threshold
+    
+    if not np.any(valid_mask):
+        return []
+        
+    # Update idx_all dan similarities hanya ke item yang valid
+    idx_all = idx_all[valid_mask]
+    similarities = similarities[valid_mask]
+    
     base_scores = normalize_minmax(similarities)
     
     # Pilih dengan MMR

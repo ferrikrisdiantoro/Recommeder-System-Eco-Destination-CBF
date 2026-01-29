@@ -82,10 +82,12 @@ def search_controls(items: pd.DataFrame):
 
     top_n_s = st.slider("Jumlah hasil", 5, 40, 12, 1)
     mmr_lambda_s = st.slider("MMR λ (Search)", 0.0, 1.0, 0.7, 0.05)
+    min_similarity = st.slider("Min. Similarity (Threshold)", 0.0, 0.5, 0.1, 0.05, 
+                               help="Hanya tampilkan hasil dengan kemiripan di atas nilai ini.")
     
     st.button("Cari", type="primary", on_click=on_search_click)
     
-    return st.session_state.search_query, top_n_s, mmr_lambda_s, st.session_state.search_active
+    return st.session_state.search_query, top_n_s, mmr_lambda_s, min_similarity, st.session_state.search_active
 
 def render_cards(items: pd.DataFrame, pairs: List[tuple[int,float]], show_score: bool=True, title_suffix: str=""):
     if not pairs:

@@ -78,7 +78,7 @@ with tab_feed:
 
 # ---------------- SEARCH / KB (CBF query) ----------------
 with tab_search:
-    query, top_n_s, mmr_lambda_s, is_search_active = search_controls(items)
+    query, top_n_s, mmr_lambda_s, min_sim, is_search_active = search_controls(items)
     
     # If search is active and we have a query
     if is_search_active and query.strip():
@@ -86,7 +86,8 @@ with tab_search:
             items=items, X=X, vectorizer=vectorizer, nbrs=nbrs,
             query=query, filters=filters,
             top_n=top_n_s, mmr_lambda=mmr_lambda_s,
-            per_category_cap=feed_knobs.per_category_cap
+            per_category_cap=feed_knobs.per_category_cap,
+            similarity_threshold=min_sim
         )
         # UFW
         if fb_knobs.use_feedback and results:
