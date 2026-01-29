@@ -99,7 +99,11 @@ with tab_search:
             )
         else:
             final_pairs = results
-        render_cards(items, final_pairs, title_suffix="Search/KB")
+        
+        if final_pairs:
+            render_cards(items, final_pairs, title_suffix="Search/KB")
+        else:
+            st.warning(f"Tidak ada hasil untuk '{query}' dengan threshold {min_sim:.2f}. Coba turunkan 'Min. Similarity' atau gunakan kata kunci lain.")
     else:
         st.info("Masukkan kueri lalu klik **Cari** untuk melihat hasil.")
 
