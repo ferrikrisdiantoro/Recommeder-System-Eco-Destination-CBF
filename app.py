@@ -31,6 +31,21 @@ with st.spinner("Memuat artifacts..."):
     items, X, vectorizer, nbrs = load_artifacts(ART_DIR)
 ensure_min_columns(items)
 
+# --- Validasi Artifacts (PENTING untuk client beda OS) ---
+if vectorizer is None or not hasattr(vectorizer, "idf_"):
+    st.error("🚨 **CRITICAL ERROR: Model Machine Learning rusak atau tidak kompatibel!**")
+    st.warning("""
+    **Penyebab:** Versi library (scikit-learn) di komputer ini berbeda dengan pembuat model.
+    
+    **SOLUSI:**
+    1. Buka terminal di folder project ini.
+    2. Jalankan perintah: 
+       `python rebuild_artifacts.py`
+    3. Restart aplikasi ini.
+    """)
+    st.stop()  # Hentikan aplikasi agar tidak lanjut ke error 'idf not fitted'
+
+
 st.title("🌿 EcoTourism Recommender — CBF + UFW")
 st.caption("CBF dasar + User Feedback Weighting | TF‑IDF + NearestNeighbors (cosine) | Like/Skip/Bookmark (session)")
 
