@@ -325,33 +325,51 @@ def _filter_blocked_items(idx_all: np.ndarray, blocked_gids: Optional[Set[int]])
     return np.array([i for i in idx_all if i not in blocked_set])
 
 
-def _calculate_base_scores(items: pd.DataFrame, idx_all: np.ndarray) -> np.ndarray:
+def _calculate_base_scores(
+    items: pd.DataFrame, 
+    idx_all: np.ndarray,
+    X=None,
+    liked_gids: Optional[Set[int]] = None
+) -> np.ndarray:
     """
-    Menghitung skor dasar berdasarkan rating item.
-    
-    Cara Kerja:
-        1. Ambil rating dari item yang lolos filter
-        2. Normalisasi ke range 0-1 menggunakan min-max
-        3. Tambah noise kecil untuk menghindari tie (skor sama)
-    
-    Args:
-        items: DataFrame item
-        idx_all: Index item yang lolos filter
-    
-    Returns:
-        np.ndarray: Skor dasar yang sudah dinormalisasi
+    Menghitung skor dasar berdasarkan rating item + similarity dengan item yang disukai.
     """
-    # Ambil rating, fill NaN dengan 0, clip nilai negatif
+    # 1. Base Score dari Rating
     ratings = items.iloc[idx_all]["rating"].fillna(0.0).clip(lower=0.0).values.astype(float)
+    scores = normalize_minmax(ratings)
     
-    # Normalisasi ke 0-1
-    normalized_scores = normalize_minmax(ratings)
-    
-    # Tambah noise kecil (1e-4) untuk tie-breaking
-    # RandomState(13) untuk reproducibility
+    # 2. Boosting dari Liked Items (User Profile)
+    if liked_gids and X is not None:
+        # Filter liked_gids yang valid
+        valid_likes = [g for g in liked_gids if 0 <= g < X.shape[0]]
+        
+        if valid_likes:
+            try:
+                # User Profile Vector = Rata-rata vektor item yang disukai
+                # X adalah sparse matrix, mean mengembalikan matrix dense (row vector)
+                user_profile = X[valid_likes].mean(axis=0)
+                
+                # Hitung similarity semua kandidat dengan user profile
+                # X[idx_all] shape: (n_candidates, n_features)
+                # user_profile shape: (1, n_features)
+                candidate_vectors = X[idx_all]
+                
+                # cosine_similarity return (n_samples_1, n_samples_2) array
+                sim_scores = cosine_similarity(candidate_vectors, user_profile).flatten()
+                
+                # Tambahkan bonus skor (bobot 0.4 agar cukup signifikan tapi tidak dominan)
+                scores += (sim_scores * 0.4)
+                
+                # Re-normalize agar tetap 0-1
+                scores = normalize_minmax(scores)
+                
+            except Exception as e:
+                print(f"Warning: Failed to calculate like boosting: {e}")
+
+    # 3. Tambah noise kecil untuk tie-breaking
     noise = np.random.RandomState(13).rand(len(idx_all)) * 1e-4
     
-    return normalized_scores + noise
+    return scores + noise
 
 
 def _add_serendipity_items(
@@ -424,7 +442,8 @@ def build_feed_cbf(
     mmr_lambda: float = 0.7, 
     per_category_cap: int = 2, 
     serendipity_pct: int = 15, 
-    blocked_gids: Optional[Set[int]] = None
+    blocked_gids: Optional[Set[int]] = None,
+    liked_gids: Optional[Set[int]] = None
 ) -> List[Candidate]:
     """
     Membangun feed rekomendasi menggunakan Content-Based Filtering.
@@ -473,8 +492,8 @@ def build_feed_cbf(
     if idx_all.size == 0:
         return []
     
-    # Step 3: Hitung skor dasar dari rating
-    base_scores = _calculate_base_scores(items, idx_all)
+    # Step 3: Hitung skor dasar (Rating + Liked Similarity)
+    base_scores = _calculate_base_scores(items, idx_all, X=X, liked_gids=liked_gids)
     
     # Step 4: Pilih item menggunakan MMR
     selected_gids = mmr_select(
