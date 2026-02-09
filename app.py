@@ -102,7 +102,7 @@ with tab_search:
             items=items, X=X, vectorizer=vectorizer, nbrs=nbrs,
             query=query, filters=filters,
             top_n=top_n_s, mmr_lambda=mmr_lambda_s,
-            per_category_cap=feed_knobs.per_category_cap,
+            per_category_cap=20, # Force UNLIMITED/HIGH cap for Search (agar hasil lengkap)
             similarity_threshold=min_sim
         )
         # UFW
